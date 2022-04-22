@@ -5,8 +5,6 @@ import lombok.extern.java.Log;
 import me.changwoo.authserver.dto.MemberDto;
 import me.changwoo.authserver.protocol.request.LoginRequest;
 import me.changwoo.authserver.protocol.request.SignUpRequest;
-import me.changwoo.authserver.protocol.response.ErrorResponse;
-import me.changwoo.authserver.protocol.response.ResultResponse;
 import me.changwoo.authserver.repository.MemberRepository;
 import me.changwoo.authserver.repository.entity.Member;
 import org.springframework.http.HttpHeaders;
@@ -17,13 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 @Log
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -37,7 +34,11 @@ public class MemberService {
         String password = passwordEncoder.encode(signUpRequest.getPassword());
 
         try {
-            memberRepository.save(Member.builder()
+            MemberDto memberDto = memberRepository.findByEmail(signUpRequest.getEmail());
+            if(memberDto != null) {
+                return responseProvider.errorMessage(false, "SIGNUP_FAIL::EXIST", "이미 있는 회원입니다.", HttpStatus.NOT_FOUND);
+            }
+            Member member = memberRepository.save(Member.builder()
                     .id(uuid)
                     .password(password)
                     .email(signUpRequest.getEmail())
@@ -58,7 +59,7 @@ public class MemberService {
             String password = request.getPassword();
             MemberDto memberDto = memberRepository.findByEmail(email);
 
-            if(memberDto != null) {
+            if(memberDto == null) {
                 return responseProvider.errorMessage(false, "LOGIN_FAIL::NOUSER", "이메일 정보가 잘못되었습니다.", HttpStatus.NOT_FOUND);
             }
 

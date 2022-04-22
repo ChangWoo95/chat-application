@@ -1,8 +1,11 @@
 package me.changwoo.authserver.repository.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +15,11 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Table(name = "MEMBER")
-@NoArgsConstructor
-public class Member {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends BaseTimeEntity implements Persistable<String> {
 
     @Id
-    @Column(name = "USER_ID")
+    @Column(name = "MEMBER_ID")
     private String id;
 
     @Column(name = "EMAIL", nullable = false)
@@ -38,5 +41,21 @@ public class Member {
         this.nickName = nickName;
         this.password = password;
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}' + this.getCraetedTime() + "\n" + this.getModifiedTime();
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.getCraetedTime() == null;
     }
 }

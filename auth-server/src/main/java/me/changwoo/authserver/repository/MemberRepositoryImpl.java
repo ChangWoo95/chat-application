@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import me.changwoo.authserver.dto.MemberDto;
+import me.changwoo.authserver.dto.QMemberDto;
 import me.changwoo.authserver.repository.entity.QMember;
 
 import java.util.List;
@@ -28,8 +29,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public MemberDto findByEmail(String email) {
         QMember member = QMember.member;
+
         return factory
-                .select(Projections.constructor(MemberDto.class, member.id, member.email, member.password, member.nickName))
+                .select(new QMemberDto(member.id, member.email, member.password, member.nickName, member.phoneNumber))
                 .from(member)
                 .where(member.email.eq(email))
                 .fetchOne();
