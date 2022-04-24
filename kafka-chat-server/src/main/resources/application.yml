@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8081
 
 spring:
   jpa:
@@ -17,4 +17,4 @@ spring:
     type: redis
   redis:
     host: localhost
-    port: 6380
+    port: 6379
