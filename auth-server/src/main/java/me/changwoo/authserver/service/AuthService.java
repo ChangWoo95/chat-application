@@ -78,12 +78,13 @@ public class AuthService {
             if(passwordEncoder.matches(password, memberDto.getPassword())) {
                 log.info("Successful login");
                 HttpHeaders httpHeaders = new HttpHeaders();
-                httpHeaders.set("Access-token", tokenProvider.createAccessToken(memberDto.getId()));
+                httpHeaders.add("access-token", tokenProvider.createAccessToken(memberDto.getId()));
 //                redisProvider.setRedis(memberDto.getId(), tokenProvider.createRefreshToken(memberDto.getId()));
                 opsAuthInfo.set(memberDto.getId(), tokenProvider.createRefreshToken(memberDto.getId()));
 
                 log.info("레디스 확인 작업");
                 log.info((String)opsAuthInfo.get(memberDto.getId()));
+
 
                 return responseProvider.successMessage(true, null, httpHeaders);
             }
