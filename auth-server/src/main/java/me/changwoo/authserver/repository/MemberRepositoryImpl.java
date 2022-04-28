@@ -36,4 +36,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(member.email.eq(email))
                 .fetchOne();
     }
+
+    @Override
+    public List<String> findFriendListById(String id) {
+        QMember member = QMember.member;
+
+        return factory
+                .select(member.friendList)
+                .from(member)
+                .where(member.id.eq(id))
+                .fetch();
+    }
 }

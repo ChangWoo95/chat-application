@@ -8,4 +8,5 @@ public interface MemberRepositoryCustom {
 
 //    public List<MemberDto> findAllByEmail(String email);
     public MemberDto findByEmail(String email);
+    public List<String> findFriendListById(String id);
 }

@@ -12,14 +12,16 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class TokenProvider {
 
-    private final long ACCESS_TOKEN_EXPIRED_TIME  = 1000L * 60 * 3;
+    private final long ACCESS_TOKEN_EXPIRED_TIME = 1000L * 60 * 3;
     private final long REFRESH_TOKEN_EXPIRED_TIME = 1000L * 60 * 5;
     private final String SUBJECT = "userId";
+    private final String NICKNAME = "nickName";
     private final String ACCESS_TOKEN = "Access-token";
     private final String ACCESS_KEY = "access";
     private final String REFRESH_TOKEN = "Refresh-token";
@@ -41,10 +43,11 @@ public class TokenProvider {
     }
 
     // sertPayload
-    private Map<String, Object> createClaims(String id) {
-         Map<String, Object> claims = new HashMap<>();
-         claims.put(SUBJECT, id);
-         return claims;
+    private Map<String, Object> createClaims(String id, String nickName) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(SUBJECT, id);
+        claims.put(NICKNAME, nickName);
+        return claims;
     }
 
     // set encryption
@@ -53,22 +56,22 @@ public class TokenProvider {
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String createAccessToken(String id) {
+    public String createAccessToken(String id, String nickName) {
         return Jwts.builder()
-                .setSubject(id)
+                .setSubject("INFO")
                 .setHeader(createHeader(ACCESS_TOKEN))
-                .setClaims(createClaims(SUBJECT))
+                .setClaims(createClaims(id, nickName))
                 .setExpiration(createExpireDate(ACCESS_TOKEN_EXPIRED_TIME))
                 .signWith(SignatureAlgorithm.HS256, createSiginingKey(ACCESS_KEY))
                 .compact();
     }
 
 
-    public String createRefreshToken(String id) {
+    public String createRefreshToken(String id, String nickName) {
         return Jwts.builder()
-                .setSubject(id)
+                .setSubject("INFO")
                 .setHeader(createHeader(REFRESH_TOKEN))
-                .setClaims(createClaims(SUBJECT))
+                .setClaims(createClaims(id, nickName))
                 .setExpiration(createExpireDate(REFRESH_TOKEN_EXPIRED_TIME))
                 .signWith(SignatureAlgorithm.HS256, createSiginingKey(REFRESH_KEY))
                 .compact();

@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addExposedHeader("access-token");
         configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
+        configuration.addAllowedOriginPattern("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

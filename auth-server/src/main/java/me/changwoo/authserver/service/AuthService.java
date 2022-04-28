@@ -1,14 +1,12 @@
 package me.changwoo.authserver.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.java.Log;
 import me.changwoo.authserver.dto.MemberDto;
 import me.changwoo.authserver.protocol.request.LoginRequest;
 import me.changwoo.authserver.protocol.request.SignUpRequest;
 import me.changwoo.authserver.repository.MemberRepository;
 import me.changwoo.authserver.repository.entity.Member;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpHeaders;
@@ -78,9 +76,9 @@ public class AuthService {
             if(passwordEncoder.matches(password, memberDto.getPassword())) {
                 log.info("Successful login");
                 HttpHeaders httpHeaders = new HttpHeaders();
-                httpHeaders.add("access-token", tokenProvider.createAccessToken(memberDto.getId()));
+                httpHeaders.add("access-token", tokenProvider.createAccessToken(memberDto.getId(), memberDto.getNickName()));
 //                redisProvider.setRedis(memberDto.getId(), tokenProvider.createRefreshToken(memberDto.getId()));
-                opsAuthInfo.set(memberDto.getId(), tokenProvider.createRefreshToken(memberDto.getId()));
+                opsAuthInfo.set(memberDto.getId(), tokenProvider.createRefreshToken(memberDto.getId(), memberDto.getNickName()));
 
                 log.info("레디스 확인 작업");
                 log.info((String)opsAuthInfo.get(memberDto.getId()));

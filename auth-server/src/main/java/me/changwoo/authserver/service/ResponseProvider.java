@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class ResponseProvider {
-    public ResponseEntity<?> successMessage(boolean success, List<Object> data) {
+    public ResponseEntity<?> successMessage(boolean success, List<?> data) {
         return new ResponseEntity<>(ResultResponse.builder()
                                                   .success(success)
                                                   .response(data)
@@ -20,7 +20,7 @@ public class ResponseProvider {
                                     HttpStatus.OK);
     }
 
-    public ResponseEntity<?> successMessage(boolean success, List<Object> data, HttpHeaders headers) {
+    public ResponseEntity<?> successMessage(boolean success, List<?> data, HttpHeaders headers) {
         return new ResponseEntity<>(ResultResponse.builder()
                 .success(success)
                 .response(data)
